@@ -10,8 +10,12 @@ bundle: build
 	rm -rf $(DIST)
 	mkdir -p $(DIST)/Contents/MacOS $(DIST)/Contents/Resources
 	cp .build/release/$(APP) $(DIST)/Contents/MacOS/
+	cp -R .build/release/$(APP)_$(APP).bundle $(DIST)/Contents/Resources/
 	cp Resources/Info.plist $(DIST)/Contents/
-	if [ -f Resources/$(APP).icns ]; then cp Resources/$(APP).icns $(DIST)/Contents/Resources/; fi
+	xcrun actool Resources/$(APP).icon --compile $(DIST)/Contents/Resources \
+		--platform macosx --minimum-deployment-target 14.0 \
+		--app-icon $(APP) --include-all-app-icons \
+		--output-partial-info-plist /dev/null > /dev/null
 	codesign --force --sign - $(DIST)
 
 install: bundle

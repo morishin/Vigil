@@ -6,6 +6,10 @@ let package = Package(
     defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     targets: [
-        .executableTarget(name: "Vigil", path: "Sources/Vigil")
+        .executableTarget(
+            name: "Vigil",
+            path: "Sources/Vigil",
+            resources: [.copy("Resources/candle.svg")]
+        )
     ]
 )

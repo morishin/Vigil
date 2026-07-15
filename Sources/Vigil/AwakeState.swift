@@ -91,36 +91,32 @@ final class AwakeState: ObservableObject {
         Self.candleImage(active: isActive)
     }
 
-    /// Hand-drawn candle (SF Symbols has no candle): rounded body, wick, teardrop flame.
+    /// Candle from the bundled SVG (same artwork as the app icon).
     /// Inactive renders as a template image; active is lit orange.
-    nonisolated private static func candleImage(active: Bool) -> NSImage {
-        let image = NSImage(size: NSSize(width: 16, height: 18), flipped: false) { _ in
-            let color: NSColor = active ? .systemOrange : .black
-            color.setFill()
-            // Body
-            NSBezierPath(roundedRect: NSRect(x: 4.5, y: 1, width: 7, height: 8.5), xRadius: 1.5, yRadius: 1.5).fill()
-            // Wick
-            NSBezierPath(rect: NSRect(x: 7.6, y: 9.5, width: 0.8, height: 1.4)).fill()
-            // Flame: teardrop — pointed top, round bottom
-            let flame = NSBezierPath()
-            flame.move(to: NSPoint(x: 8.0, y: 17.2))
-            flame.curve(
-                to: NSPoint(x: 8.0, y: 11.0),
-                controlPoint1: NSPoint(x: 7.1, y: 15.2),
-                controlPoint2: NSPoint(x: 5.2, y: 11.4)
-            )
-            flame.curve(
-                to: NSPoint(x: 8.0, y: 17.2),
-                controlPoint1: NSPoint(x: 10.8, y: 11.4),
-                controlPoint2: NSPoint(x: 8.9, y: 15.2)
-            )
-            flame.close()
-            flame.fill()
+    private static func candleImage(active: Bool) -> NSImage {
+        let base = candleSVG
+        guard active else {
+            let image = base.copy() as! NSImage
+            image.isTemplate = true
+            return image
+        }
+        return NSImage(size: base.size, flipped: false) { rect in
+            base.draw(in: rect)
+            NSColor.systemOrange.setFill()
+            rect.fill(using: .sourceAtop)
             return true
         }
-        image.isTemplate = !active
-        return image
     }
+
+    private static let candleSVG: NSImage = {
+        let fallbackSize = NSSize(width: 10, height: 18)
+        guard let url = Bundle.module.url(forResource: "candle", withExtension: "svg"),
+              let image = NSImage(contentsOf: url), image.size.height > 0
+        else { return NSImage(size: fallbackSize) }
+        let height: CGFloat = 18
+        image.size = NSSize(width: image.size.width * height / image.size.height, height: height)
+        return image
+    }()
 
     // MARK: - Keep Awake (pmset disablesleep + auto-off timer)
 

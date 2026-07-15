@@ -10,6 +10,8 @@
 	<string>Vigil</string>
 	<key>CFBundleIconFile</key>
 	<string>Vigil</string>
+	<key>CFBundleIconName</key>
+	<string>Vigil</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundlePackageType</key>
