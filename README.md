@@ -12,6 +12,8 @@ A macOS menu bar app that keeps your Mac awake — even with the lid closed — 
 - **Launch at login** can be toggled from the menu
 - `caffeinate` processes running on the system are detected when the menu opens and shown with their parent process name and estimated remaining time (display only)
 
+<img width="640" height="441" alt="スクリーンショット 2026-07-15 14 06 22" src="https://github.com/user-attachments/assets/497fdccc-ac0d-40ed-bf51-115dc221a95b" />
+
 ## Build & Install
 
 ```sh
