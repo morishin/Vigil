@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vigil — Keep your Mac awake, even with the lid closed</title>
+  <meta name="description" content="Vigil is a macOS menu bar app that keeps your Mac awake with the lid closed, so AI agents and long-running jobs can work through the night — then re-enables sleep automatically. Free and open source.">
+  <meta name="keywords" content="Vigil, keep awake, macOS, prevent sleep, disablesleep, pmset, clamshell, lid closed, AI agent, Claude Code, caffeinate alternative, menu bar app, Mac app, open source">
+  <meta name="author" content="morishin">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f0b07">
+  <link rel="canonical" href="https://vigil.morishin.me/">
+  <link rel="alternate" hreflang="en" href="https://vigil.morishin.me/">
+  <link rel="alternate" hreflang="ja" href="https://vigil.morishin.me/ja/">
+  <link rel="alternate" hreflang="x-default" href="https://vigil.morishin.me/">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..650;1,9..144,400..650&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vigil">
+  <meta property="og:title" content="Vigil — Keep your Mac awake, even with the lid closed">
+  <meta property="og:description" content="Keep your Mac awake with the lid closed — let AI agents and long jobs work through the night. Sleep comes back automatically.">
+  <meta property="og:url" content="https://vigil.morishin.me/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:image" content="https://vigil.morishin.me/assets/icon.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Vigil app icon — a lit candle">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Vigil — Keep your Mac awake, even with the lid closed">
+  <meta name="twitter:description" content="Keep your Mac awake with the lid closed — let AI agents work through the night. Sleep comes back automatically.">
+  <meta name="twitter:image" content="https://vigil.morishin.me/assets/icon.png">
+  <meta name="twitter:creator" content="@morishin127">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Vigil",
+    "operatingSystem": "macOS 14",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "A macOS menu bar app that keeps your Mac awake with the lid closed, so AI agents and long-running jobs can keep working. Sleep is re-enabled automatically when a timer expires.",
+    "url": "https://vigil.morishin.me/",
+    "downloadUrl": "https://github.com/morishin/Vigil/releases/latest",
+    "image": "https://vigil.morishin.me/assets/icon.png",
+    "author": { "@type": "Person", "name": "morishin", "url": "https://github.com/morishin" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "isAccessibleForFree": true,
+    "inLanguage": ["en", "ja"]
+  }
+  </script>
+
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="dimmer" aria-hidden="true"></div>
+
+<header class="site-header">
+  <a href="/" class="site-logo">
+    <img src="assets/icon.png" alt="">
+    <span>Vigil</span>
+  </a>
+  <div class="header-right">
+    <span class="header-meta">Free &amp; Open Source</span>
+    <nav class="lang-switch">
+      <a href="/" class="active">EN</a>
+      <a href="/ja/">JA</a>
+    </nav>
+  </div>
+</header>
+
+<main class="hero">
+  <div class="candle-stage rise rise-1">
+    <div class="candle-glow" aria-hidden="true"></div>
+    <svg class="candle-svg" viewBox="0 0 120 120" role="img" aria-label="A lit candle — Vigil's icon">
+      <defs>
+        <linearGradient id="flame-grad" x1="0" y1="10" x2="0" y2="50" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#f7a83b"/>
+          <stop offset="1" stop-color="#d75407"/>
+        </linearGradient>
+      </defs>
+      <path class="candle-body" d="M33 64.9688C33 58.4724 38.7642 53.4806 45.2333 53.7046C50.0918 53.8729 55.4705 53.7102 59.5 52.6378C62.5099 51.8367 66.2727 50.36 70.0092 48.7163C77.3691 45.4786 86 50.6627 86 58.7276V99.3617C86 105.237 81.2542 110 75.4 110H43.6C37.7458 110 33 105.237 33 99.3617V64.9688Z"/>
+      <path class="candle-flame" d="M59.2305 50.4255C56.5236 50.4255 54.1521 49.8957 52.1159 48.836C50.0918 47.7763 48.5167 46.2914 47.3908 44.3813C46.2769 42.4582 45.72 40.2145 45.72 37.6503C45.72 36.3028 45.8158 35.1122 46.0075 34.0787C46.2111 33.0321 46.4566 32.0901 46.7441 31.2528C47.0435 30.4155 47.3369 29.6306 47.6244 28.898C47.9238 28.1653 48.1694 27.4392 48.361 26.7197C48.5646 26.0001 48.6664 25.2152 48.6664 24.3648C48.6664 23.9331 48.6425 23.4817 48.5946 23.0107C48.5586 22.5267 48.5407 22.1538 48.5407 21.8922C48.5407 21.4343 48.6545 21.0745 48.882 20.8128C49.1216 20.5381 49.433 20.4007 49.8163 20.4007C50.4032 20.4007 50.9901 20.5904 51.5769 20.9698C52.1758 21.3492 52.7208 21.8856 53.2119 22.579C53.7149 23.2724 54.1042 24.0835 54.3797 25.0124L53.5712 25.2086C53.8227 24.7377 53.9784 24.319 54.0383 23.9527C54.1102 23.5733 54.1461 23.1939 54.1461 22.8145C54.1341 21.5978 53.9305 20.4465 53.5353 19.3607C53.14 18.2748 52.6369 17.2413 52.0261 16.2601C51.4153 15.2658 50.7625 14.3238 50.0678 13.4342C49.8881 13.1987 49.7444 12.9567 49.6366 12.7081C49.5408 12.4465 49.4929 12.1914 49.4929 11.9428C49.4929 11.3148 49.7444 10.8373 50.2475 10.5102C50.7505 10.1701 51.4212 10 52.2597 10C53.7568 10 55.3379 10.1962 57.0027 10.5887C58.6795 10.9812 60.3444 11.5961 61.9973 12.4334C63.6502 13.2576 65.2132 14.3042 66.6864 15.5732C68.1597 16.8423 69.4712 18.3533 70.621 20.1064C71.7828 21.8595 72.6931 23.8677 73.3519 26.131C74.0106 28.3812 74.34 30.8931 74.34 33.6666C74.34 37.0288 73.7052 39.9659 72.4356 42.4778C71.178 44.9897 69.4173 46.939 67.1536 48.3258C64.8898 49.7256 62.2488 50.4255 59.2305 50.4255ZM59.6078 44.9504C60.9493 44.9504 62.0632 44.6364 62.9495 44.0085C63.8358 43.3674 64.5006 42.5301 64.9437 41.4966C65.3989 40.45 65.6264 39.3118 65.6264 38.082C65.6264 36.8653 65.4108 35.6421 64.9797 34.4123C64.5485 33.1695 63.9137 32.0378 63.0753 31.0174C62.2368 29.9838 61.2008 29.1531 59.9671 28.5251C59.8833 28.4858 59.8114 28.4924 59.7515 28.5447C59.7036 28.5971 59.6856 28.6755 59.6976 28.7802C59.8414 30.2716 59.8234 31.6519 59.6437 32.9209C59.476 34.1899 59.1646 35.1711 58.7095 35.8645C58.5179 35.3281 58.2843 34.831 58.0088 34.3731C57.7453 33.9021 57.4219 33.4769 57.0386 33.0975C56.9668 33.0321 56.9009 33.0125 56.841 33.0386C56.7811 33.0648 56.7452 33.1302 56.7332 33.2349C56.6614 33.7713 56.4997 34.2684 56.2481 34.7263C55.9966 35.1711 55.7271 35.629 55.4397 36.1C55.1522 36.5579 54.9007 37.0812 54.6851 37.6699C54.4695 38.2455 54.3617 38.9455 54.3617 39.7697C54.3617 41.3134 54.8408 42.5628 55.799 43.5179C56.7692 44.4729 58.0388 44.9504 59.6078 44.9504Z"/>
+    </svg>
+  </div>
+
+  <label class="awake-toggle rise rise-1" for="keep-awake">
+    <input type="checkbox" id="keep-awake" checked>
+    <span class="switch" aria-hidden="true"></span>
+    <span>Keep Awake</span>
+  </label>
+
+  <h1 class="rise rise-2">
+    Close the lid.<br>
+    <em>Your agents work on.</em>
+  </h1>
+
+  <p class="lede rise rise-3">
+    Vigil keeps your Mac awake <strong>with the lid closed</strong>, so AI agents
+    and long-running jobs can grind through the night. When the timer ends,
+    sleep comes back on its own.
+  </p>
+
+  <div class="cta-wrap rise rise-4">
+    <a href="https://github.com/morishin/Vigil/releases/latest" class="hero-cta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      <span>Download for macOS</span>
+    </a>
+    <span class="cta-note">Free &amp; open source · Requires macOS 14+</span>
+  </div>
+</main>
+
+<section class="showcase rise rise-5">
+  <img src="assets/screenshot.webp" width="860" height="592" alt="The Vigil menu opened from the macOS menu bar, showing the Keep Awake toggle, duration picker, and lid-close options">
+</section>
+
+<section class="features">
+  <div class="container">
+    <div class="features-grid">
+
+      <article class="feature-card">
+        <h3>Auto-off timer</h3>
+        <p>15 minutes to 12 hours, or indefinite. Sleep re-enables itself.</p>
+      </article>
+
+      <article class="feature-card">
+        <h3>Locks on lid close</h3>
+        <p>Screen off and locked the moment it shuts. Processes keep running.</p>
+      </article>
+
+      <article class="feature-card">
+        <h3>Nothing left burning</h3>
+        <p>Quitting always restores sleep — a crash is cleaned up at next launch.</p>
+      </article>
+
+      <article class="feature-card">
+        <h3>One password, once</h3>
+        <p>Optional sudoers rule scoped to <code>pmset -a disablesleep</code> only.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div>© 2026 Vigil</div>
+  <div class="footer-links">
+    <a href="https://github.com/morishin/Vigil">GitHub</a>
+    <a href="https://github.com/morishin/Vigil/releases">Releases</a>
+    <a href="https://github.com/morishin/Vigil/issues">Issues</a>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
