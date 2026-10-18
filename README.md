@@ -8,6 +8,7 @@ A macOS menu bar app that keeps your Mac awake — even with the lid closed — 
   unlocked even when the lid is closed. Vigil watches the clamshell state (event-driven via IOKit,
   no polling) and locks the session + sleeps the display the moment the lid closes, while
   processes keep running. Can be turned off in the menu
+- **Prevent display off & screen saver while lid is open** (off by default): while Keep Awake is on, holds a `PreventUserIdleDisplaySleep` power assertion so the display doesn't turn off and the screen saver doesn't start — useful for GUI automation such as computer use
 - The menu bar icon (a candle) turns orange while active
 - **Launch at login** can be toggled from the menu
 - `caffeinate` processes running on the system are detected when the menu opens and shown with their parent process name and estimated remaining time (display only)

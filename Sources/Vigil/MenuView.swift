@@ -36,6 +36,13 @@ struct MenuView: View {
             }
             .pickerStyle(.menu)
 
+            Toggle(isOn: $state.keepDisplayAwake) {
+                Text("Prevent display off & screen saver while lid is open")
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
+
             Toggle(isOn: $state.lockOnLidClose) {
                 Text("Lock & screen off on lid close")
             }

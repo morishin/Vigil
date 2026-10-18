@@ -1,4 +1,5 @@
 import AppKit
+import IOKit.pwr_mgt
 import ServiceManagement
 import SwiftUI
 
@@ -19,12 +20,15 @@ final class AwakeState: ObservableObject {
     private static let sudoersPath = "/etc/sudoers.d/vigil"
     private static let autoOffEndDateKey = "autoOffEndDate"
     private static let lockOnLidCloseKey = "lockOnLidClose"
+    private static let keepDisplayAwakeKey = "keepDisplayAwake"
 
     private static var sudoersRuleExists: Bool {
         FileManager.default.fileExists(atPath: sudoersPath)
     }
 
-    @Published private(set) var sleepDisabled = false
+    @Published private(set) var sleepDisabled = false {
+        didSet { updateDisplayAssertion() }
+    }
     /// Seconds until sleep is automatically re-enabled; nil when no auto-off is scheduled
     @Published private(set) var remainingSeconds: Int?
     @Published private(set) var externalCaffeinates: [ExternalCaffeinate] = []
@@ -48,6 +52,15 @@ final class AwakeState: ObservableObject {
         }
     }
 
+    /// While Keep Awake is on, also keep the display on and the screen saver from starting
+    /// (an idle display sleep or screen saver breaks GUI automation such as computer use)
+    @Published var keepDisplayAwake: Bool {
+        didSet {
+            UserDefaults.standard.set(keepDisplayAwake, forKey: Self.keepDisplayAwakeKey)
+            updateDisplayAssertion()
+        }
+    }
+
     @Published var launchAtLogin = SMAppService.mainApp.status == .enabled {
         didSet {
             let enabled = SMAppService.mainApp.status == .enabled
@@ -64,6 +77,7 @@ final class AwakeState: ObservableObject {
         }
     }
 
+    private var displayAssertionID: IOPMAssertionID = IOPMAssertionID(kIOPMNullAssertionID)
     private var clamshellMonitor: ClamshellMonitor?
     private var countdownTimer: Timer?
     /// Persisted so the auto-off deadline survives an app restart
@@ -79,6 +93,7 @@ final class AwakeState: ObservableObject {
 
     private init() {
         lockOnLidClose = UserDefaults.standard.object(forKey: Self.lockOnLidCloseKey) as? Bool ?? true
+        keepDisplayAwake = UserDefaults.standard.object(forKey: Self.keepDisplayAwakeKey) as? Bool ?? false
         clamshellMonitor = ClamshellMonitor { [weak self] isClosed in
             guard let self, isClosed, self.sleepDisabled, self.lockOnLidClose else { return }
             Self.lockAndTurnOffDisplay()
@@ -224,6 +239,26 @@ final class AwakeState: ObservableObject {
         if result.status != 0 {
             let script = "do shell script \"/usr/bin/pmset -a disablesleep 0\" with administrator privileges"
             _ = Self.run("/usr/bin/osascript", ["-e", script])
+        }
+    }
+
+    // MARK: - Keep display awake
+
+    /// Hold a PreventUserIdleDisplaySleep assertion while Keep Awake and the option are both on.
+    /// It also keeps the screen saver from starting. Released automatically if the app exits.
+    private func updateDisplayAssertion() {
+        let shouldHold = sleepDisabled && keepDisplayAwake
+        let isHeld = displayAssertionID != IOPMAssertionID(kIOPMNullAssertionID)
+        if shouldHold, !isHeld {
+            IOPMAssertionCreateWithName(
+                kIOPMAssertPreventUserIdleDisplaySleep as CFString,
+                IOPMAssertionLevel(kIOPMAssertionLevelOn),
+                "Vigil: keep display awake" as CFString,
+                &displayAssertionID
+            )
+        } else if !shouldHold, isHeld {
+            IOPMAssertionRelease(displayAssertionID)
+            displayAssertionID = IOPMAssertionID(kIOPMNullAssertionID)
         }
     }
 
